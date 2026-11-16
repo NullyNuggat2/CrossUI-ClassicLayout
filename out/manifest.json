@@ -1,0 +1,132 @@
+{
+  "@context" : "http://iiif.io/api/presentation/2/context.json",
+  "@type" : "sc:Manifest",
+  "@id" : "https://www.davidrumsey.com/luna/servlet/iiif/m/RUMSEY~8~1~383977~90149945/manifest",
+  "label" : "Pretoria",
+  "attribution" : "David Rumsey Historical Map Collection",
+  "service" : {
+    "@context" : "http://iiif.io/api/search/1/context.json",
+    "@id" : "https://www.davidrumsey.com/luna/servlet/iiif/services/RUMSEY~8~1~383977~90149945/search",
+    "profile" : "http://iiif.io/api/search/1/search"
+  },
+  "sequences" : [ {
+    "@type" : "sc:Sequence",
+    "canvases" : [ {
+      "@id" : "https://www.davidrumsey.com/luna/servlet/iiif/m/RUMSEY~8~1~383977~90149945/canvas/c1",
+      "@type" : "sc:Canvas",
+      "label" : "Pretoria",
+      "description" : "",
+      "metadata" : [ {
+        "label" : "Author",
+        "value" : "Great Britain. War Office. Intelligence Division"
+      }, {
+        "label" : "Date",
+        "value" : "1900"
+      }, {
+        "label" : "Short Title",
+        "value" : "Pretoria"
+      }, {
+        "label" : "Publisher",
+        "value" : "Great Britain. War Office. Intelligence Division"
+      }, {
+        "label" : "Publisher Location",
+        "value" : "London"
+      }, {
+        "label" : "Type",
+        "value" : "Case Map"
+      }, {
+        "label" : "Obj Height cm",
+        "value" : "44"
+      }, {
+        "label" : "Obj Width cm",
+        "value" : "59"
+      }, {
+        "label" : "Note",
+        "value" : "Sheet titled Pretoria, at 1:250,000, from Intelligence Division, War Office series No. 1367. Compiled from existing topographical and reconnaissance material for military use during the Anglo-Boer War. Title and scale are taken from the preceding case cover."
+      }, {
+        "label" : "Country",
+        "value" : "South Africa"
+      }, {
+        "label" : "Subject",
+        "value" : "Military"
+      }, {
+        "label" : "Full Title",
+        "value" : "Pretoria. Transvaal and the Orange Free State. Intelligence Division, War Office No. 1367."
+      }, {
+        "label" : "List No",
+        "value" : "18178.014"
+      }, {
+        "label" : "Series No",
+        "value" : "14"
+      }, {
+        "label" : "Publication Author",
+        "value" : "Great Britain. War Office. Intelligence Division"
+      }, {
+        "label" : "Pub Date",
+        "value" : "1900"
+      }, {
+        "label" : "Pub Title",
+        "value" : "Transvaal and the Orange Free State. Intelligence Division, War Office, No. 1367"
+      }, {
+        "label" : "Pub Reference",
+        "value" : "For a listing of the other maps in this series, see https://catalogue.nla.gov.au/catalog/7463006"
+      }, {
+        "label" : "Pub Note",
+        "value" : "Group of eleven British War Office Intelligence Division maps of the Transvaal and Orange Free State, issued during the opening period of the Anglo-Boer War, 1899-1900. The 1:250,000 series originally comprised 28 sheets, compiled from existing maps, local surveys, reconnaissance sketches, military reports, and travelers accounts. The compilation provided roads, river crossings, watering places, settlements, and generalized relief at a time when systematic large-scale mapping was incomplete. The eleven maps here are housed in separate cloth covers, each bearing its own pasted title and scale information, allowing the maps to be joined without obscuring the cartography. A composite image combines all eleven sheets. The supplied dealer description notes that the maps were available during the British advance toward Pretoria in 1900, although contemporary commentators criticized their positional accuracy."
+      }, {
+        "label" : "Pub List No",
+        "value" : "18178.000"
+      }, {
+        "label" : "Pub Type",
+        "value" : "Case Map"
+      }, {
+        "label" : "Pub Height cm",
+        "value" : "22"
+      }, {
+        "label" : "Pub Width cm",
+        "value" : "15"
+      }, {
+        "label" : "Image No",
+        "value" : "18178014.jp2"
+      }, {
+        "label" : "Download 1",
+        "value" : "<a href=https://www.davidrumsey.com/rumsey/download.pl?image=/229/18178014.jp2 target=_blank>Full Image Download in JP2 Format</a>"
+      }, {
+        "label" : "Download 2",
+        "value" : "<a href=https://www.extensis.com/support/geoviewer-9 target=_blank >GeoViewer for JP2 and SID files</a>"
+      }, {
+        "label" : "Authors",
+        "value" : "Great Britain. War Office. Intelligence Division"
+      } ],
+      "thumbnail" : {
+        "@id" : "https://www.davidrumsey.com/luna/servlet/iiif/RUMSEY~8~1~383977~90149945/full/!96,96/0/default.jpg",
+        "format" : "image/jpeg"
+      },
+      "images" : [ {
+        "@type" : "oa:Annotation",
+        "motivation" : "sc:painting",
+        "resource" : {
+          "@id" : "https://www.davidrumsey.com/luna/servlet/iiif/RUMSEY~8~1~383977~90149945/full/!1024,1024/0/default.jpg",
+          "@type" : "dctypes:Image",
+          "service" : {
+            "@context" : "http://iiif.io/api/image/2/context.json",
+            "@id" : "https://www.davidrumsey.com/luna/servlet/iiif/RUMSEY~8~1~383977~90149945",
+            "profile" : "http://iiif.io/api/image/2/level1.json",
+            "protocol" : "http://iiif.io/api/image"
+          },
+          "format" : "image/jpeg",
+          "width" : 14651,
+          "height" : 10740
+        },
+        "on" : "https://www.davidrumsey.com/luna/servlet/iiif/m/RUMSEY~8~1~383977~90149945/canvas/c1"
+      } ],
+      "width" : 14651,
+      "height" : 10740
+    } ]
+  } ],
+  "logo" : {
+    "@id" : "https://www.davidrumsey.com/luna/images/LUNAIIIF80.png",
+    "format" : "image/png"
+  },
+  "related" : "https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~383977~90149945"
+}
