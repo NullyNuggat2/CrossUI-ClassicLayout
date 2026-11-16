@@ -1,0 +1,28 @@
+name: map
+on: { push: { branches: [map-dl] } }
+permissions: { contents: write }
+jobs:
+  dl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -x
+          mkdir -p out; cd out
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
+          ID="RUMSEY~8~1~383977~90149945"
+          curl -sSL -A "$UA" -o page.html "https://www.davidrumsey.com/luna/servlet/detail/$ID" || true
+          grep -oE 'https?://[^"'"'"' ]*(Size[0-9]|iiif|\.jp2|\.jpg)[^"'"'"' ]*' page.html | sort -u > urls.txt || true
+          curl -sSL -A "$UA" -o manifest.json "https://www.davidrumsey.com/luna/servlet/iiif/m/$ID/manifest" || true
+          for u in "https://www.davidrumsey.com/luna/servlet/iiif/$ID/full/full/0/default.jpg" "https://www.davidrumsey.com/luna/servlet/iiif/$ID/full/max/0/default.jpg" $(grep -E 'Size4|Size5' urls.txt); do
+            curl -sSL -A "$UA" -o try.jpg "$u" && file try.jpg | grep -qi image && { mv try.jpg map.jpg; echo "$u" > src.txt; break; }
+          done
+          ls -la; file * || true
+          if [ -f map.jpg ]; then
+            pip install -q img2pdf pillow
+            python3 -c "from PIL import Image;Image.MAX_IMAGE_PIXELS=None;im=Image.open('map.jpg');print(im.size);im.save('Pretoria_map.png',optimize=True)"
+            img2pdf map.jpg -o Pretoria_map.pdf
+          fi
+      - run: |
+          git config user.name bot; git config user.email bot@users.noreply.github.com
+          git add -f out; git commit -m "map output" || true; git push
