@@ -6,23 +6,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          set -x
-          mkdir -p out; cd out
+      - name: tiles
+        run: |
+          mkdir -p work/t && cd work
           UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36"
-          ID="RUMSEY~8~1~383977~90149945"
-          curl -sSL -A "$UA" -o page.html "https://www.davidrumsey.com/luna/servlet/detail/$ID" || true
-          grep -oE 'https?://[^"'"'"' ]*(Size[0-9]|iiif|\.jp2|\.jpg)[^"'"'"' ]*' page.html | sort -u > urls.txt || true
-          curl -sSL -A "$UA" -o manifest.json "https://www.davidrumsey.com/luna/servlet/iiif/m/$ID/manifest" || true
-          for u in "https://www.davidrumsey.com/luna/servlet/iiif/$ID/full/full/0/default.jpg" "https://www.davidrumsey.com/luna/servlet/iiif/$ID/full/max/0/default.jpg" $(grep -E 'Size4|Size5' urls.txt); do
-            curl -sSL -A "$UA" -o try.jpg "$u" && file try.jpg | grep -qi image && { mv try.jpg map.jpg; echo "$u" > src.txt; break; }
-          done
-          ls -la; file * || true
-          if [ -f map.jpg ]; then
-            pip install -q img2pdf pillow
-            python3 -c "from PIL import Image;Image.MAX_IMAGE_PIXELS=None;im=Image.open('map.jpg');print(im.size);im.save('Pretoria_map.png',optimize=True)"
-            img2pdf map.jpg -o Pretoria_map.pdf
-          fi
-      - run: |
-          git config user.name bot; git config user.email bot@users.noreply.github.com
-          git add -f out; git commit -m "map output" || true; git push
+          B="https://www.davidrumsey.com/luna/servlet/iiif/RUMSEY~8~1~383977~90149945"
+          curl -sSL -A "$UA" -o info.json "$B/info.json"; cat info.json
+          python3 - <<'PY' > jobs.txt
+          import json
+          d=json.load(open('info.json')); W,H=d['width'],d['height']
+          t=(d.get('tiles') or [{'width':1024}])[0]; tw=t['width']; th=t.get('height',tw)
+          B="https://www.davidrumsey.com/luna/servlet/iiif/RUMSEY~8~1~383977~90149945"
+          for y in range(0,H,th):
+            for x in range(0,W,tw):
+              w=min(tw,W-x); h=min(th,H-y)
+              print(f"{B}/{x},{y},{w},{h}/{w},/0/default.jpg t/{x}_{y}.jpg")
+          PY
+          wc -l jobs.txt
+          cat jobs.txt | xargs -P 12 -n 2 sh -c 'for i in 1 2 3 4; do curl -sSfL -A "'"$UA"'" -o "$1" "$0" && break; sleep 2; done'
+          ls t | wc -l
+      - name: stitch
+        run: |
+          cd work; pip install -q img2pdf pillow
+          python3 - <<'PY'
+          import json,os
+          from PIL import Image
+          Image.MAX_IMAGE_PIXELS=None
+          d=json.load(open('info.json')); W,H=d['width'],d['height']
+          im=Image.new('RGB',(W,H),'white'); bad=0
+          for f in os.listdir('t'):
+            x,y=map(int,f[:-4].split('_'))
+            try:
+              tl=Image.open('t/'+f).convert('RGB'); im.paste(tl,(x,y))
+              if tl.size==(1,1): bad+=1
+            except Exception as e: bad+=1; print('bad',f,e)
+          print('size',W,H,'bad tiles',bad)
+          im.save('Pretoria_1900_map.png',compress_level=9)
+          im.resize((W//6,H//6),Image.LANCZOS).save('preview.jpg',quality=85)
+          PY
+          img2pdf Pretoria_1900_map.png -o Pretoria_1900_map.pdf
+          ls -la
+      - name: release
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          cd work
+          gh release delete pretoria-map -y --cleanup-tag || true
+          gh release create pretoria-map Pretoria_1900_map.png Pretoria_1900_map.pdf preview.jpg --target map-dl -t "Pretoria 1900 map (David Rumsey)" -n "Full resolution, lossless PNG + PDF"
