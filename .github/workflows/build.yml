@@ -1,5 +1,7 @@
 name: Build APK
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,7 +12,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '8.7' }
       - run: gradle assembleRelease
+      - run: cp app/build/outputs/apk/release/*.apk L1L5-SOS-GPS.apk
       - uses: actions/upload-artifact@v4
-        with:
-          name: L1L5-SOS-GPS
-          path: app/build/outputs/apk/release/*.apk
+        with: { name: L1L5-SOS-GPS, path: L1L5-SOS-GPS.apk }
+      - name: Publish APK to apk branch
+        run: |
+          mkdir out && cp L1L5-SOS-GPS.apk out/ && cd out
+          git init -q -b l1l5-sos-gps-apk
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add . && git commit -qm "APK ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" l1l5-sos-gps-apk
